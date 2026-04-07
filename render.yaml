@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: btc-explorer-backend
+    runtime: rust
+    rootDir: backend
+    buildCommand: cargo build --release
+    startCommand: ./target/release/btc-explorer-backend
+    envVars:
+      - key: RUST_LOG
+        value: info
+
+  - type: static
+    name: btc-explorer-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://btc-explorer-backend.onrender.com

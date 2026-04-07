@@ -1,0 +1,155 @@
+/* ============================================================================
+   Global Design System — Bitcoin Script Explorer
+   Aesthetic: Dark terminal-meets-editorial. Bloomberg terminal × textbook.
+   Fonts: DM Serif Display (headings) + DM Mono (code/data) + DM Sans (UI)
+   Palette: Near-black background, amber accent, cool-gray text hierarchy
+   ============================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Core palette */
+  --bg:          #0c0c0e;
+  --bg-1:        #111114;
+  --bg-2:        #18181d;
+  --bg-3:        #1f1f26;
+  --bg-4:        #26262f;
+
+  /* Borders */
+  --border:      #2a2a35;
+  --border-2:    #353545;
+
+  /* Text hierarchy */
+  --text-1:      #e8e6df;   /* primary — warm white */
+  --text-2:      #9b9890;   /* secondary */
+  --text-3:      #5a5853;   /* tertiary / muted */
+
+  /* Accent — amber/orange, the single "hot" color */
+  --amber:       #f59e0b;
+  --amber-dim:   #92600a;
+  --amber-bg:    #1a1206;
+  --amber-border:#3d2a06;
+
+  /* Status colors */
+  --green:       #34d399;
+  --green-bg:    #061812;
+  --green-border:#0d3326;
+  --red:         #f87171;
+  --red-bg:      #1a0606;
+  --red-border:  #3d0e0e;
+  --blue:        #60a5fa;
+  --blue-bg:     #06101a;
+  --blue-border: #0d2540;
+
+  /* Opcode colors — each type has its own color */
+  --op-push:     #60a5fa;   /* blue — data */
+  --op-hash:     #c084fc;   /* purple — crypto */
+  --op-verify:   #f59e0b;   /* amber — verification */
+  --op-sig:      #34d399;   /* green — signature */
+  --op-flow:     #fb923c;   /* orange — flow control */
+  --op-error:    #f87171;   /* red — errors */
+
+  /* Typography */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+  --font-ui:      'DM Sans', system-ui, sans-serif;
+
+  /* Spacing scale */
+  --s1: 4px;  --s2: 8px;  --s3: 12px;  --s4: 16px;
+  --s5: 20px; --s6: 24px; --s7: 32px;  --s8: 48px;
+
+  /* Radius */
+  --r1: 3px; --r2: 6px; --r3: 10px;
+}
+
+html { font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Subtle scan-line texture using a gradient */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.008) 2px,
+    rgba(255,255,255,0.008) 4px
+  );
+}
+
+/* ── Grid noise overlay (applied to #root) ── */
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ── Selection ── */
+::selection { background: var(--amber-dim); color: var(--text-1); }
+
+/* ── Typography ── */
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.2; }
+
+.mono { font-family: var(--font-mono); }
+
+/* ── Layout ── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--s6);
+}
+
+/* ── Utility ── */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.35s ease both;
+}
+
+/* ── Loading spinner ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border-2);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}

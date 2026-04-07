@@ -1,0 +1,93 @@
+.tx-meta {
+  margin-bottom: var(--s6);
+}
+
+/* ── txid row ── */
+.txid-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  margin-bottom: var(--s4);
+  overflow: hidden;
+}
+
+.txid-label {
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.txid-value {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.txid-link {
+  font-size: 11px;
+  color: var(--amber);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+  font-family: var(--font-mono);
+}
+
+.txid-link:hover { opacity: 1; }
+
+/* ── Stat cards grid ── */
+.meta-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--s2);
+}
+
+.stat-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: var(--s3) var(--s4);
+}
+
+.stat-card.stat-green {
+  background: var(--green-bg);
+  border-color: var(--green-border);
+}
+
+.stat-card.stat-amber {
+  background: var(--amber-bg);
+  border-color: var(--amber-border);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 13px;
+  color: var(--text-1);
+  font-weight: 500;
+}
+
+.stat-card.stat-green .stat-value { color: var(--green); }
+.stat-card.stat-amber .stat-value { color: var(--amber); }
+
+.stat-note {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
