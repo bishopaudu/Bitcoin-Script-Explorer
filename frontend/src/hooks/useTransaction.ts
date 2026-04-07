@@ -29,7 +29,9 @@ export function useTransaction(): UseTransactionResult {
     setTransaction(null);
 
     try {
-      const response = await window.fetch(`/api/tx/${txid.trim()}`);
+      const base = import.meta.env.VITE_API_URL ?? ''
+const response = await window.fetch(`${base}/api/tx/${txid.trim()}`)
+     // const response = await window.fetch(`/api/tx/${txid.trim()}`);
       const data = await response.json();
 
       if (!response.ok) {
