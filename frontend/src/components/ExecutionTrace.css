@@ -1,7 +1,8 @@
 .exec-trace {
   font-size: 13px;
-  background: var(--bg-1);
-  border-top: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .exec-header {
@@ -143,7 +144,7 @@
 .pipeline-op.current-pulse {
   opacity: 1;
   filter: none;
-  box-shadow: 0 0 0 2px var(--amber-border);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), 0 0 0 2px var(--amber-border);
   transform: scale(1.05);
 }
 
@@ -183,7 +184,8 @@
 .player-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 250px;
+  flex: 1;
+  min-height: 400px;
 }
 
 @media (max-width: 768px) {

@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { useTransaction } from './hooks/useTransaction'
 import { SearchBar } from './components/SearchBar'
 import { TxMeta } from './components/TxMeta'
-import { ScriptPanel } from './components/ScriptPanel'
+import { ExecutionTrace } from './components/ExecutionTrace'
 import { LandingHero } from './components/LandingHero'
 import { OpcodeDictionary } from './components/OpcodeDictionary'
 import './App.css'
 
 export default function App() {
   const { transaction, loading, error, fetch } = useTransaction()
-  const [activeTab, setActiveTab] = useState<'outputs' | 'inputs'>('outputs')
+  const [activeScript, setActiveScript] = useState<{ kind: 'input' | 'output', index: number }>({ kind: 'input', index: 0 })
   const [isDictionaryOpen, setIsDictionaryOpen] = useState(false)
 
   return (
@@ -68,60 +68,59 @@ export default function App() {
 
           {/* ── Transaction loaded ── */}
           {transaction && !loading && (
-            <div className="animate-fade-up">
+            <div className="workspace animate-fade-up">
               <TxMeta tx={transaction} />
 
-              {/* ── Tab switcher ── */}
-              <div className="tab-bar">
-                <button
-                  className={`tab-btn ${activeTab === 'outputs' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('outputs')}
-                >
-                  <span className="tab-label">Outputs</span>
-                  <span className="tab-count">{transaction.output_count}</span>
-                  <span className="tab-hint">locking scripts</span>
-                </button>
-                <button
-                  className={`tab-btn ${activeTab === 'inputs' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('inputs')}
-                >
-                  <span className="tab-label">Inputs</span>
-                  <span className="tab-count">{transaction.input_count}</span>
-                  <span className="tab-hint">unlocking scripts</span>
-                </button>
-              </div>
+              <div className="workspace-grid">
+                {/* ── LEFT SIDEBAR ── */}
+                <aside className="workspace-sidebar">
+                  {transaction.inputs.length > 0 && (
+                    <div className="sidebar-section">
+                      <h3 className="sidebar-title">Unlocking Scripts (Inputs)</h3>
+                      <div className="sidebar-list">
+                        {transaction.inputs.map((input) => (
+                          <button
+                            key={input.index}
+                            className={`sidebar-item ${activeScript.kind === 'input' && activeScript.index === input.index ? 'active' : ''}`}
+                            onClick={() => setActiveScript({ kind: 'input', index: input.index })}
+                          >
+                            <span className="sidebar-item-label">Input #{input.index}</span>
+                            <span className="sidebar-item-type">{input.is_coinbase ? 'Coinbase' : (input.witness && input.witness.length > 0 ? 'Witness' : 'Legacy')}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-              {/* ── Explanation banner ── */}
-              <div className="concept-banner">
-                {activeTab === 'outputs' ? (
-                  <>
-                    <span className="concept-tag">scriptPubKey</span>
-                    <span className="concept-text">
-                      A <strong>locking script</strong> — set by the sender, defines conditions
-                      that must be satisfied to spend this output. Think of it as a padlock.
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="concept-tag">scriptSig</span>
-                    <span className="concept-text">
-                      An <strong>unlocking script</strong> — provided by the spender, supplies
-                      the data that satisfies the locking conditions. The key to the padlock.
-                    </span>
-                  </>
-                )}
-              </div>
+                  {transaction.outputs.length > 0 && (
+                    <div className="sidebar-section">
+                      <h3 className="sidebar-title">Locking Scripts (Outputs)</h3>
+                      <div className="sidebar-list">
+                        {transaction.outputs.map((output) => (
+                          <button
+                            key={output.index}
+                            className={`sidebar-item ${activeScript.kind === 'output' && activeScript.index === output.index ? 'active' : ''}`}
+                            onClick={() => setActiveScript({ kind: 'output', index: output.index })}
+                          >
+                            <span className="sidebar-item-label">Output #{output.index}</span>
+                            <span className="sidebar-item-type">{output.script_type || 'Unknown'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </aside>
 
-              {/* ── Script panels ── */}
-              <div className="script-list">
-                {activeTab === 'outputs'
-                  ? transaction.outputs.map((output) => (
-                      <ScriptPanel key={output.index} script={output} kind="output" />
-                    ))
-                  : transaction.inputs.map((input) => (
-                      <ScriptPanel key={input.index} script={input} kind="input" />
-                    ))
-                }
+                {/* ── MAIN STAGE ── */}
+                <section className="workspace-main">
+                  {activeScript.kind === 'input' && transaction.inputs[activeScript.index]?.execution ? (
+                    <ExecutionTrace key={`in-${activeScript.index}`} execution={transaction.inputs[activeScript.index].execution!} />
+                  ) : activeScript.kind === 'output' && transaction.outputs[activeScript.index]?.execution ? (
+                    <ExecutionTrace key={`out-${activeScript.index}`} execution={transaction.outputs[activeScript.index].execution!} />
+                  ) : (
+                    <div className="missing-script">Select a script from the sidebar</div>
+                  )}
+                </section>
               </div>
             </div>
           )}
